@@ -1,0 +1,12 @@
+df<- read.table("F://JHU/household_power_consumption.txt", header = TRUE)
+library(dplyr)
+library(tidyr)
+df<- df%>%
+  separate(Date.Time.Global_active_power.Global_reactive_power.Voltage.Global_intensity.Sub_metering_1.Sub_metering_2.Sub_metering_3, c("Date", "Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity", 'Sub_metering_1', "Sub_metering_2","Sub_metering_3"), ";")
+df$Global_active_power<- as.numeric(df$Global_active_power)
+df$Date<- as.Date(df$Date, "%d/%m/%Y")
+df$weekday<- weekdays(df$Date)
+df$CHR<- as.POSIXct(paste(df$Date, df$Time), format= "%Y-%m-%d %H:%M:%S", usetz=FALSE)
+png("plot2.png")
+plot(df$CHR, df$Global_active_power, type = "l", xlab = "", ylab = "Global Active Power (kilowatts)")
+dev.off()
